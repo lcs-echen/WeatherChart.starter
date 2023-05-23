@@ -33,9 +33,32 @@ struct PrecipitationChart: View {
     var measurements: [DayInfo]
 
   var body: some View {
-    EmptyView()
+      // 1
+      Chart {
+        // 2
+        ForEach(0..<12, id: \.self) { month in
+          // 3
+          let precipitationValue = sumPrecipitation(month)
+          let monthName = DateUtils.monthAbbreviationFromInt(month)
+          // 4
+          BarMark(
+            // 5
+            x: .value("Month", monthName),
+            // 6
+            y: .value("Precipitation", precipitationValue)
+          )
+        }
+      }
+
   }
+    func sumPrecipitation(_ month: Int) -> Double {
+      self.measurements.filter {
+        Calendar.current.component(.month, from: $0.date) == month + 1
+      }
+      .reduce(0) { $0 + $1.precipitation }
+    }
 }
+
 
 
 struct PrecipitationChart_Previews: PreviewProvider {
@@ -47,9 +70,4 @@ struct PrecipitationChart_Previews: PreviewProvider {
   }
 }
 
-func sumPrecipitation(_ month: Int) -> Double {
-  self.measurements.filter {
-    Calendar.current.component(.month, from: $0.date) == month + 1
-  }
-  .reduce(0) { $0 + $1.precipitation }
-}
+
