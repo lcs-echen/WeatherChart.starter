@@ -37,6 +37,7 @@ struct PrecipitationChart: View {
   }
 }
 
+
 struct PrecipitationChart_Previews: PreviewProvider {
   static var previews: some View {
       // swiftlint:disable force_unwrapping
