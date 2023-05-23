@@ -37,12 +37,18 @@ struct PrecipitationChart: View {
         let precipitationValue = sumPrecipitation(month)
         let monthName = DateUtils.monthAbbreviationFromInt(month)
         BarMark(
-          x: .value("Month", monthName),
-          y: .value("Precipitation", precipitationValue)
+          x: .value("Precipitation", precipitationValue),
+          y: .value("Month", monthName)
         )
+        .foregroundStyle(.mint)
+        .annotation(position: .trailing) {
+          Text(String(format: "%.2f in", precipitationValue))
+            .font(.caption)
+            
+        }
+
+
       }
-
-
   }
     func sumPrecipitation(_ month: Int) -> Double {
       self.measurements.filter {

@@ -32,20 +32,11 @@ struct TemperatureTab: View {
   var station: WeatherStation
 
   var body: some View {
-    VStack {
-      Text("Temperatures for 2018")
-      HStack {
-        Text("Year Low: \(station.lowTemperatureForYear.stringRounded)")
-        Spacer()
-        Text("Year High: \(station.highTemperatureForYear.stringRounded)")
-      }.padding(.horizontal)
-      List(station.measurements) { measurement in
-        Text(
-          " \(measurement.dateString): " +
-          "Lo: \(measurement.low.stringToOneDecimal) " +
-          "Hi: \(measurement.high.stringToOneDecimal)")
+      VStack {
+        Text("Precipitation for 2018")
+        PrecipitationChart(measurements: self.station.measurements)
       }
-    }.padding()
+
   }
 }
 
