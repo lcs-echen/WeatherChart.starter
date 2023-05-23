@@ -33,22 +33,15 @@ struct PrecipitationChart: View {
     var measurements: [DayInfo]
 
   var body: some View {
-      // 1
-      Chart {
-        // 2
-        ForEach(0..<12, id: \.self) { month in
-          // 3
-          let precipitationValue = sumPrecipitation(month)
-          let monthName = DateUtils.monthAbbreviationFromInt(month)
-          // 4
-          BarMark(
-            // 5
-            x: .value("Month", monthName),
-            // 6
-            y: .value("Precipitation", precipitationValue)
-          )
-        }
+      Chart(0..<12, id: \.self) { month in
+        let precipitationValue = sumPrecipitation(month)
+        let monthName = DateUtils.monthAbbreviationFromInt(month)
+        BarMark(
+          x: .value("Month", monthName),
+          y: .value("Precipitation", precipitationValue)
+        )
       }
+
 
   }
     func sumPrecipitation(_ month: Int) -> Double {
