@@ -27,15 +27,36 @@
 /// THE SOFTWARE.
 
 import SwiftUI
+import Charts
 
 struct SnowfallChart: View {
+    var measurements: [DayInfo]
+
   var body: some View {
-    EmptyView()
+      // 1
+      Chart(measurements) { dayInfo in
+        // 2
+        PointMark(
+          x: .value("Day", dayInfo.date),
+          y: .value("Inches", dayInfo.snowfall)
+        )
+      }
+      .chartYScale(domain: 0...10)
+      .chartPlotStyle { plotArea in
+        plotArea.background(.blue.opacity(0.2))
+      }
+      .chartYAxisLabel("Inches")
+
+
+
   }
 }
 
 struct SnowfallChart_Previews: PreviewProvider {
   static var previews: some View {
-    SnowfallChart()
+      // swiftlint:disable force_unwrapping
+      SnowfallChart(
+        measurements: WeatherInformation()!.stations[2].measurements)
+
   }
 }
