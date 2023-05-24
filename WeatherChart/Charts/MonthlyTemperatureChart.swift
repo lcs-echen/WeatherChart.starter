@@ -27,15 +27,69 @@
 /// THE SOFTWARE.
 
 import SwiftUI
+import Charts
 
 struct MonthlyTemperatureChart: View {
+  var measurements: [DayInfo]
+
+  func measurementsByMonth(_ month: Int) -> [DayInfo] {
+    return self.measurements.filter {
+      Calendar.current.component(.month, from: $0.date) == month + 1
+    }
+  }
+
   var body: some View {
-    EmptyView()
+    NavigationView {
+      monthlyAvgTemperatureView
+    }
+    .navigationTitle("Monthly Temperature")
+  }
+
+  var monthlyAvgTemperatureView: some View {
+    List(0..<12) { month in
+      let destination = WeeklyTemperatureChart(measurements: measurements, month: month)
+      NavigationLink(destination: destination) {
+        VStack {
+          Chart(measurementsByMonth(month)) { dayInfo in
+            LineMark(
+              x: .value("Day", dayInfo.date),
+              y: .value("Temperature", dayInfo.temp(type: .avg))
+            )
+            .foregroundStyle(.orange)
+            .interpolationMethod(.catmullRom)
+          }
+          .chartForegroundStyleScale([
+            TemperatureTypes.avg.rawValue: .orange
+          ])
+          .chartXAxisLabel("Weeks", alignment: .center)
+          .chartYAxisLabel("ºF")
+          .chartXAxis {
+            AxisMarks(values: .automatic(minimumStride: 7)) { _ in
+              AxisGridLine()
+              AxisTick()
+              AxisValueLabel(
+                format: .dateTime.week(.weekOfMonth)
+              )
+            }
+          }
+          .chartYAxis {
+            AxisMarks( preset: .extended, position: .leading)
+          }
+
+          Text(Calendar.current.monthSymbols[month])
+        }
+        .frame(height: 150)
+      }
+    }
+    .listStyle(.plain)
   }
 }
 
 struct MonthlyTemperatureChart_Previews: PreviewProvider {
   static var previews: some View {
-    MonthlyTemperatureChart()
+    // swiftlint:disable force_unwrapping
+    MonthlyTemperatureChart(
+      measurements: WeatherInformation()!.stations[2].measurements)
   }
 }
+
